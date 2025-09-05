@@ -24,7 +24,7 @@ function App() {
   async function reviewCode() {
     setLoading(true)   
     try {
-      const response = await axios.post('https://refactor-ai-p9xt.onrender.com/ai/get-review', { code })
+      const response = await axios.post('https://refactor-ai-analyze-your-code.onrender.com/ai/get-review', { code })
       setReview(response.data)
     } catch (error) {
       setReview("⚠️ Error fetching review. Please try again.")
