@@ -10,6 +10,7 @@ import './App.css'
 
 function App() {
   const [ count, setCount ] = useState(0)
+  const [ loading, setLoading ] = useState(false)
   const [ code, setCode ] = useState(` function sum() {
   return 1 + 1
 }`)
@@ -21,9 +22,16 @@ function App() {
   }, [])
 
   async function reviewCode() {
-    const response = await axios.post('http://localhost:3000/ai/get-review', { code })
-    setReview(response.data)
+    setLoading(true)   
+    try {
+      const response = await axios.post('http://localhost:3000/ai/get-review', { code })
+      setReview(response.data)
+    } catch (error) {
+      setReview("⚠️ Error fetching review. Please try again.")
+    }
+    setLoading(false)  
   }
+
 
   return (
     <>
@@ -50,11 +58,13 @@ function App() {
             className="review">Review</div>
         </div>
         <div className="right">
-          <Markdown
-
-            rehypePlugins={[ rehypeHighlight ]}
-
-          >{review}</Markdown>
+          {loading ? (                         
+            <p>⏳ Analyzing your code...</p>
+          ) : (
+            <Markdown rehypePlugins={[ rehypeHighlight ]}>
+              {review}
+            </Markdown>
+          )}
         </div>
       </main>
     </>
